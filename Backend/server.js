@@ -11,6 +11,7 @@ import { YSocketIO } from "y-socket.io/dist/server"
 const app = express()
 // Create an HTTP server using the Express app
 const httpServer = createServer(app)
+app.use(express.static("public"))
 
 // Create a Socket.IO server and allow connections from any origin
 const io = new Server(httpServer, {
@@ -24,14 +25,6 @@ const io = new Server(httpServer, {
 const ySocketIO = new YSocketIO(io)
 // Start Yjs collaboration service
 ySocketIO.initialize()
-
-// Test route
-app.get("/", (req, res) => {
-    res.status(200).json({
-        message: "hello world",
-        success: true
-    })
-})
 
 // Health check route
 app.get('/health', (req, res) => {

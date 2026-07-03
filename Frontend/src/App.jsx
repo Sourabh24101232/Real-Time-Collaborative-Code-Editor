@@ -64,7 +64,7 @@ const App = () => {
 
       // Connect this client to the collaboration server
       const provider = new SocketIOProvider(
-        "http://localhost:3000", // Backend server
+        "/", // Backend server
         "monaco",                // Shared room/document name
         ydoc,                    // Shared Yjs document
         { autoConnect: true },   // Connect immediately
