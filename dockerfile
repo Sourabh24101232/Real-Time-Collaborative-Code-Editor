@@ -1,14 +1,26 @@
-# Build the Backend using docker
+# stage 1 : Build the Frontend [dist folder]
 
-# Every Docker image starts with a base image.
-# Here, the base image is Node.js version 20 running on Alpine Linux.
-FROM node:20-alpine
-
-#Copy Backend Files
-COPY ./Backend .
-
-#to install node_modules in container
+#create an internal environment with Nodejs+OS
+FROM node:20-alpine as frontend-builder
+#copy all content of folder "Frontend" in app(inside environment)
+COPY ./Frontend /app
+#Now, all command will be executed for app folder
+WORKDIR /app
+#since we do not have node_modules in app ,so to get it , we run this-
 RUN npm install
 
-#command to Start the Server
+RUN npm run build
+
+#Stage 2 : Build the Backend
+
+#create another internal environment with Nodejs+OS
+FROM node:20-alpine
+COPY ./Backend /app
+WORKDIR /app
+RUN npm install
+
+#stage 3 : Copy the dist folder content in Backend/public folder
+
+#copy all content of app of frontend builder to public of app of backend
+COPY --from=frontend-builder /app/dist /app/public
 CMD ["node", "server.js"]
